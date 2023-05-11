@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты</title>
+</head>
+<body>
+Разработчик - Дмитрий Ковков
+Почта - d.a.kovkov@gmail.com
+
+<h1>
+    <a th:if="${#authorization.expression('isAuthenticated()')}" href="\logout"> Выйти </a>
+    <a th:unless="${#authorization.expression('isAuthenticated()')}" href="\login"> Войти </a>
+</h1>
+
+</body>
+</html>
