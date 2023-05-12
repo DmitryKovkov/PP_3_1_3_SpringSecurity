@@ -1,66 +1,189 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Пользователи - Users</title>
 </head>
 <body>
-<H1>Список пользователей</H1>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
-        <th>Возраст</th>
-        <th>Действия</th>
-    </tr>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.getId()}"></td>
-        <td th:text="${user.getName()}"></td>
-        <td th:text="${user.getSurname()}"></td>
-        <td th:text="${user.getAge()}"></td>
-        <td>
-            <table>
-                <tr th:each="role : ${user.getRoles()}">
-                    <td th:text="${role.getName()}"></td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <form th:method="delete" th:action="@{/admin/{id}(id=${user.getId()})}">
-                <input type="submit" value="Удалить">
-            </form>
-        </td>
-        <td>
-            <form method="get" th:action="@{/admin/{id}/edit(id=${user.getId()})}">
-                <input type="submit" value="Редактировать">
-            </form>
-        </td>
-    </tr>
-</table>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" sec:authentication="name"> CRUD-приложение </a>
 
-<form method="post" action="/admin/add_user" >
-    <label>
-        <input type="text" name="name" placeholder="Имя">
-        <input type="text" name="surname" placeholder="Фамилия">
-        <input type="text" name="password" placeholder="Пароль">
-        <input type="text" name="age" placeholder="Возраст">
-        <input type="text" name="roles" placeholder="Роль">
-    </label>
-    <input type="submit" value="Добавить">
-</form>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0" action="/logout" method="post">
+            <button class="btn btn-outline-success my-2 my-sm-0">Выйти</button>
+        </form>
+        <div class="form-inline my-2 my-lg-0">
+            <a class="btn btn-outline-success my-2 mr-2 my-sm-0" href="/login">Логин</a>
+        </div>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="/user" role="tab"
+               aria-controls="v-pills-home" aria-selected="true">User</a>
+            <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="/admin" role="tab"
+               aria-controls="v-pills-profile" aria-selected="false">Admin</a>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            </div>
+            <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel"
+                 aria-labelledby="v-pills-profile-tab">
+                <H3>Admin panel</H3>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-user-tables" data-toggle="tab" href="/admin"
+                           role="tab" aria-controls="nav-home" aria-selected="true">User tables</a>
+                        <a class="nav-item nav-link" id="nav-new-user" data-toggle="tab" href="/admin/add_user"
+                           role="tab" aria-controls="nav-profile" aria-selected="false">New User</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-user-tables" role="tabpanel"
+                         aria-labelledby="nav-home-tab">
+                        <H4>All users</H4>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Last Name</th>
+                                <th>Age</th>
+                                <th>Role</th>
+                                <th>Delete</th>
+                                <th>Edit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user, status : ${users}">
+                                <td th:text="${user.getId()}"></td>
+                                <td th:text="${user.getName()}"></td>
+                                <td th:text="${user.getSurname()}"></td>
+                                <td th:text="${user.getAge()}"></td>
+                                <td>
+                                    <table>
+                                        <tr th:each="role : ${user.getRoles()}">
+                                            <td th:text="${role.getName()}"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <form th:method="delete" th:action="@{/admin/{id}(id=${user.getId()})}">
+                                        <button type="submit" class="btn btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                th:data-bs-target = "|#Modal${status.index}|">
+                                            Редактировать
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" th:id = "|Modal${status.index}|" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="userModalexamplelable">Edit user</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close">x
+                                                        </button>
+                                                    </div>
+                                                    <form th:method="patch"
+                                                          th:action="@{/admin/{id}(id=${user.getId()})}">
+                                                    <div class="modal-body">
+                                                        <!-- СОДЕРЖИМОЕ МОДАЛЬНОГО ОКНА -->
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col"></div>
+                                                                <div class="col-6">
+                                                                    <div class="form-group">
+                                                                        <label>
+                                                                            <label>ID </label>
+                                                                            <input type="text" class="form-control"
+                                                                                   name="id" th:placeholder="${user.getId()}"
+                                                                                   readonly>
+                                                                            <label>name </label>
+                                                                            <input type="text" class="form-control"
+                                                                                   name="name" th:value="${user.getName()}">
+                                                                            <label>surname</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   name="surname" th:value="${user.getSurname()}">
+                                                                            <label>age</label>
+                                                                            <input type="number" class="form-control"
+                                                                                   name="age" th:value="${user.getAge()}">
+                                                                            <label>password</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   name="password"
+                                                                                   th:value="${user.getPassword()}">
+                                                                            <div class="form-group">
+                                                                                <label> Роли </label>
+                                                                                <p><select name="select"
+                                                                                           class="form-select" size="3"
+                                                                                           multiple>
+                                                                                    <option selected
+                                                                                            th:each="role : ${user.getRoles()}"
+                                                                                            th:value="${role.getId()}"
+                                                                                            th:label="${role.getName()}"></option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col"></div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Закрыть
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="nav-new-user" role="tabpanel" aria-labelledby="nav-profile-tab">...
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
-<h1>
-    <a th:if="${#authorization.expression('isAuthenticated()')}" href="\user"> Профиль </a>
-    <p></p>
-    <a th:if="${#authorization.expression('isAuthenticated()')}" href="\logout"> Выйти </a>
-    <a th:unless="${#authorization.expression('isAuthenticated()')}" href="\login"> Войти </a>
-</h1>
-
-
+<!-- Подключение JS файла bootstrap 5 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -77,4 +77,9 @@ public class MainController {
     public String printContact(){
         return "contacts";
     }
+
+    @GetMapping(value = "/admin/add_user")
+    public String addUser() {
+        return "add_user";
+    }
 }

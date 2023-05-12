@@ -1,50 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Профиль пользователя</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" sec:authentication="name"> CRUD-приложение </a>
 
-<label>
-    <h1>Профиль пользователя</h1>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Surname</th>
-            <th>Password</th>
-            <th>Age</th>
-            <th>ROLE</th>
-        </tr>
-        <tr>
-            <td th:text="${user.getUsername()}"></td>
-            <td th:text="${user.getSurname()}"></td>
-            <td th:text="${user.getPassword()}"></td>
-            <td th:text="${user.getAge()}"></td>
-            <td>
-                <table>
-                    <tr th:each="role : ${user.getRoles()}">
-                        <td th:text="${role.getName()}"></td>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0" action="/logout" method="post">
+            <button class="btn btn-outline-success my-2 my-sm-0">Выйти</button>
+        </form>
+        <div class="form-inline my-2 my-lg-0">
+            <a class="btn btn-outline-success my-2 mr-2 my-sm-0" href="/login">Логин</a>
+        </div>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="/user" role="tab"
+               aria-controls="v-pills-home" aria-selected="true">User</a>
+            <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="/admin" role="tab"
+               aria-controls="v-pills-profile" aria-selected="false">Admin</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <p> <h3> User information-page </h3> </p>
+                <h4>About user</h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Surname</th>
+                        <th>Password</th>
+                        <th>Age</th>
+                        <th>ROLE</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${user.getId()}"></td>
+                        <td th:text="${user.getUsername()}"></td>
+                        <td th:text="${user.getSurname()}"></td>
+                        <td th:text="${user.getPassword()}"></td>
+                        <td th:text="${user.getAge()}"></td>
+                        <td>
+                                <div th:each="role : ${user.getRoles()}">
+                                    <p th:text="${role.getName()}"></p>
+                                </div>
+                        </td>
+                    </tr>
+                    </tbody>
                 </table>
-            </td>
-        </tr>
-    </table>
-
-</label>
-
-<form th:unless="${#authorization.expression('isAuthenticated()')}" method="get"
-      th:action="@{/login}">
-    <button id="login-button" class="btn btn-primary" type="submit">ВОЙТИ</button>
-</form>
-
-<h1>
-    <a th:if="${#authorization.expression('isAuthenticated()')}" href="\logout"> Выйти </a>
-    <a th:unless="${#authorization.expression('isAuthenticated()')}" href="\login"> Войти </a>
-    <p></p>
-    <div sec:authorize="hasAnyRole('ADMIN')">
-        <a href="\admin"> Админка </a> <span sec:authentication="name"></span></div>
-
-</h1>
+            </div>
+            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
