@@ -11,10 +11,7 @@ import java.util.Set;
 public class Role implements GrantedAuthority {
     @Override
     public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return this.name;
     }
 
     @Id
@@ -25,9 +22,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
+   //@ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+  //  private Set<User> users;
 
     public Role() {}
 
@@ -60,11 +56,12 @@ public class Role implements GrantedAuthority {
         return getName();
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  //  public Set<User> getUsers() {
+  //      return users;
+  //  }
+
+  //  public void setUsers(Set<User> users) {
+  //      this.users = users;
+  //  }
 }

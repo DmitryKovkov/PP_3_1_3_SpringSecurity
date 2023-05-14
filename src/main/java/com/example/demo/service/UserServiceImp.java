@@ -22,11 +22,10 @@ public class UserServiceImp implements UserService{
         return userRepository.findByUsername(username);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<User> listUser() {
-        System.out.println("список пользователей");
-        System.out.println(userRepository.findAll());
+     //   System.out.println("список пользователей");
+     //   System.out.println(userRepository.findAll());
         return userRepository.findAll();
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,12 @@ import java.util.Set;
 @Controller
 public class MainController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public MainController(UserService userService) {
+    public MainController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
 
@@ -34,6 +37,7 @@ public class MainController {
     @GetMapping(value = "/admin")
     public String printUsers(Model model) {
         model.addAttribute("users", userService.listUser());
+        model.addAttribute("listRoles", roleService.listRole());
         return "users";
     }
 
@@ -44,17 +48,7 @@ public class MainController {
     }
 
     @PostMapping(value = "/admin/add_user")
-    public String addUser(@RequestParam(name = "name") String name,
-                          @RequestParam(name = "surname") String surname,
-                          @RequestParam(name = "age") Integer age,
-                          @RequestParam(name = "password") String password,
-                          @RequestParam(name = "roles") String nameRole) throws UnsupportedEncodingException {
-        System.out.println(name);
-        Set<Role> roles = new HashSet<>();
-        Role role = new Role(nameRole);
-        roles.add(role);
-        User user = new User(name, surname, age, password, roles);
-        role.setUser(user);
+    public String addUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -62,13 +56,14 @@ public class MainController {
     @GetMapping(value = "/admin/{id}/edit")
     public String edit(@PathVariable(name = "id") Long id, Model model) {
         User user = userService.findUser(id);
-        System.out.println(user.toString());
+      //  System.out.println(user.toString());
         model.addAttribute("user", user);
         return "edit";
     }
 
     @PatchMapping(value = "/admin/{id}")
     public String update(@ModelAttribute("user") User user, @PathVariable Long id){
+        System.out.println(user.getRoles());
         userService.updateUser(id, user);
         return "redirect:/admin";
     }
@@ -79,7 +74,8 @@ public class MainController {
     }
 
     @GetMapping(value = "/admin/add_user")
-    public String addUser() {
+    public String addUser(Model model) {
+        model.addAttribute("listRole", roleService.listRole());
         return "add_user";
     }
 }

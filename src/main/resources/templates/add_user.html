@@ -78,9 +78,14 @@
                                             <label for="nav-new-user">Password</label>
                                             <input type="password" class="form-control" name="password"
                                                    placeholder="Пароль">
-                                            <label for="nav-new-user">Role</label>
-                                            <input type="text" class="form-control" name="roles" placeholder="Роль">
-                                        </label>
+                                            <label for="nav-new-user">Role</label> <p>
+                                            <select name="roles" class="form-control" multiple>
+                                                <option th:each="role: ${listRole}"
+                                                        th:value="${role.getId()}"
+                                                        th:text="${role.getName()}">
+                                                </option>
+                                            </select>
+                                            </label>
                                         <p></p>
                                         <button type="submit" class="btn btn-success">Add new user</button>
                                     </div>
