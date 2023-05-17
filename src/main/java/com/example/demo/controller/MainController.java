@@ -25,6 +25,12 @@ public class MainController {
         this.roleService = roleService;
     }
 
+    @GetMapping(value = "/index")
+    public String getIndex(Model model){
+        model.addAttribute("listRole", roleService.listRole());
+        return "index";
+    }
+
 
     @GetMapping(value = "/user")
     public String homePage(Principal principal, Model model) {

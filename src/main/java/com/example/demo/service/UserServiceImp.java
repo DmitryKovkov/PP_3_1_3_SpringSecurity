@@ -31,11 +31,10 @@ public class UserServiceImp implements UserService{
 
     @Transactional
     @Override
-    public void saveUser(User user) {
-        userRepository.save(user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
-    @Transactional
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -47,9 +46,9 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void updateUser(Long id, User user) {
+    public User updateUser(Long id, User user) {
         user.setId(id);
-        userRepository.saveAndFlush(user);
+        return userRepository.saveAndFlush(user);
     }
 
 }
